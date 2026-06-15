@@ -1,0 +1,737 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>vlk_be_gui database workspace mockup</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #eef1f5;
+      --panel: #ffffff;
+      --panel-2: #f7f9fc;
+      --line: #d8dde6;
+      --line-strong: #c5ccd8;
+      --text: #20242c;
+      --muted: #697386;
+      --accent: #2563eb;
+      --accent-soft: #e8f0ff;
+      --danger: #c2413a;
+      --ok: #16825d;
+      --warning: #9a6a00;
+      --focus: #8bb8ff;
+      --shadow: 0 1px 2px rgba(15, 23, 42, .08), 0 12px 28px rgba(15, 23, 42, .08);
+      --radius: 6px;
+      font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      overflow: hidden;
+    }
+
+    button, input, select {
+      font: inherit;
+    }
+
+    .app {
+      height: 100vh;
+      display: grid;
+      grid-template-rows: 42px 38px 1fr 28px;
+      background: var(--bg);
+    }
+
+    .titlebar {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 16px;
+      padding: 0 12px;
+      background: #172033;
+      color: #f8fafc;
+      border-bottom: 1px solid #0f172a;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-weight: 650;
+      letter-spacing: 0;
+    }
+
+    .brand-mark {
+      width: 22px;
+      height: 22px;
+      border-radius: 5px;
+      background: linear-gradient(135deg, #50b4ff, #42d392);
+      display: grid;
+      place-items: center;
+      color: #07111f;
+      font-weight: 800;
+    }
+
+    .menu {
+      display: flex;
+      gap: 6px;
+      color: #cbd5e1;
+    }
+
+    .menu span {
+      padding: 5px 8px;
+      border-radius: 4px;
+    }
+
+    .menu span:first-child {
+      background: rgba(255,255,255,.09);
+      color: #fff;
+    }
+
+    .session {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #dbe3ef;
+    }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 10px;
+      padding: 5px 10px;
+      background: var(--panel);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .tools {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn {
+      height: 28px;
+      border: 1px solid var(--line-strong);
+      background: var(--panel);
+      color: var(--text);
+      border-radius: 5px;
+      padding: 0 9px;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      cursor: default;
+    }
+
+    .btn.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    .btn.icon {
+      width: 28px;
+      justify-content: center;
+      padding: 0;
+    }
+
+    .search {
+      display: flex;
+      justify-content: center;
+    }
+
+    .search input {
+      width: min(520px, 100%);
+      height: 28px;
+      border: 1px solid var(--line-strong);
+      border-radius: 5px;
+      padding: 0 10px;
+      color: var(--text);
+      background: #fbfcfe;
+      outline: none;
+    }
+
+    .search input:focus {
+      border-color: var(--focus);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, .12);
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: 268px 6px minmax(540px, 1fr) 6px 340px;
+      min-height: 0;
+      padding: 10px;
+      gap: 0;
+    }
+
+    .pane {
+      min-height: 0;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      display: grid;
+      grid-template-rows: auto 1fr;
+    }
+
+    .pane.left {
+      border-radius: var(--radius) 0 0 var(--radius);
+    }
+
+    .pane.right {
+      border-radius: 0 var(--radius) var(--radius) 0;
+    }
+
+    .splitter {
+      background:
+        linear-gradient(90deg, transparent 0, transparent 2px, var(--line-strong) 2px, var(--line-strong) 4px, transparent 4px);
+      cursor: col-resize;
+    }
+
+    .pane-head {
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 10px;
+      border-bottom: 1px solid var(--line);
+      background: var(--panel-2);
+      font-weight: 650;
+    }
+
+    .pane-body {
+      min-height: 0;
+      overflow: auto;
+    }
+
+    .tree {
+      padding: 8px;
+    }
+
+    .tree-section {
+      margin-bottom: 12px;
+    }
+
+    .tree-title {
+      padding: 5px 8px;
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    .tree-row {
+      height: 28px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 8px;
+      border-radius: 5px;
+      color: #344054;
+    }
+
+    .tree-row.active {
+      background: var(--accent-soft);
+      color: #174ea6;
+      font-weight: 600;
+    }
+
+    .main {
+      min-width: 0;
+      min-height: 0;
+      display: grid;
+      grid-template-rows: auto auto 1fr;
+      background: var(--panel);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .tabs {
+      height: 36px;
+      display: flex;
+      align-items: end;
+      gap: 2px;
+      padding: 0 8px;
+      background: var(--panel-2);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .tab {
+      height: 30px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 12px;
+      border: 1px solid transparent;
+      border-bottom: 0;
+      border-radius: 5px 5px 0 0;
+      color: var(--muted);
+    }
+
+    .tab.active {
+      background: var(--panel);
+      border-color: var(--line);
+      color: var(--text);
+      font-weight: 650;
+    }
+
+    .filterbar {
+      display: grid;
+      grid-template-columns: 1.2fr repeat(4, minmax(96px, 150px)) auto;
+      gap: 8px;
+      padding: 8px;
+      border-bottom: 1px solid var(--line);
+      background: var(--panel);
+    }
+
+    .field {
+      display: grid;
+      gap: 3px;
+    }
+
+    .field label {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .field input,
+    .field select {
+      height: 28px;
+      border: 1px solid var(--line-strong);
+      border-radius: 5px;
+      padding: 0 8px;
+      background: #fbfcfe;
+      color: var(--text);
+      min-width: 0;
+    }
+
+    .table-wrap {
+      min-height: 0;
+      overflow: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 12.5px;
+    }
+
+    thead {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      background: #f4f7fb;
+      box-shadow: inset 0 -1px var(--line);
+    }
+
+    th, td {
+      height: 30px;
+      padding: 0 8px;
+      border-bottom: 1px solid #edf0f5;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-align: left;
+    }
+
+    th {
+      color: #475467;
+      font-weight: 650;
+      border-right: 1px solid #e4e8f0;
+    }
+
+    td.num, th.num {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    td.center, th.center {
+      text-align: center;
+    }
+
+    tbody tr:hover {
+      background: #f8fbff;
+    }
+
+    tbody tr.selected {
+      background: #eaf2ff;
+      box-shadow: inset 3px 0 var(--accent);
+    }
+
+    .status-pill {
+      display: inline-flex;
+      height: 20px;
+      align-items: center;
+      padding: 0 7px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 650;
+    }
+
+    .status-pill.ok { background: #e8f7f0; color: var(--ok); }
+    .status-pill.warn { background: #fff4d6; color: var(--warning); }
+    .status-pill.danger { background: #ffe8e6; color: var(--danger); }
+
+    .inspector {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      min-height: 0;
+    }
+
+    .record-title {
+      padding: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .record-title strong {
+      display: block;
+      font-size: 15px;
+    }
+
+    .record-title span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .form {
+      padding: 12px;
+      display: grid;
+      grid-template-columns: 112px 1fr;
+      align-content: start;
+      gap: 8px 10px;
+      overflow: auto;
+    }
+
+    .form label {
+      align-self: center;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .form input,
+    .form select,
+    .form textarea {
+      min-width: 0;
+      border: 1px solid var(--line-strong);
+      border-radius: 5px;
+      background: #fbfcfe;
+      color: var(--text);
+      padding: 0 8px;
+      height: 28px;
+    }
+
+    .form textarea {
+      height: 68px;
+      padding: 7px 8px;
+      resize: none;
+      line-height: 1.3;
+    }
+
+    .form input.dirty {
+      border-color: #d39c2f;
+      background: #fffaf0;
+    }
+
+    .error-text {
+      grid-column: 2;
+      margin-top: -5px;
+      color: var(--danger);
+      font-size: 11px;
+    }
+
+    .inspector-actions {
+      display: flex;
+      justify-content: end;
+      gap: 8px;
+      padding: 10px;
+      border-top: 1px solid var(--line);
+      background: var(--panel-2);
+    }
+
+    .statusbar {
+      display: grid;
+      grid-template-columns: 1fr auto auto auto;
+      align-items: center;
+      gap: 16px;
+      padding: 0 10px;
+      background: #f8fafc;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .kbd {
+      border: 1px solid var(--line-strong);
+      border-bottom-color: #aeb7c5;
+      background: white;
+      padding: 1px 5px;
+      border-radius: 4px;
+      color: #344054;
+      font-size: 11px;
+    }
+
+    .report-preview {
+      margin: 14px;
+      border: 1px solid var(--line);
+      background: white;
+      box-shadow: var(--shadow);
+      min-height: 180px;
+      padding: 16px;
+    }
+
+    .report-preview h3 {
+      margin: 0 0 10px;
+      font-size: 15px;
+    }
+
+    .report-grid {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 6px 16px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    @media (max-width: 980px) {
+      .workspace {
+        grid-template-columns: 220px 6px 1fr;
+      }
+      .pane.right,
+      .splitter.right-split {
+        display: none;
+      }
+      .filterbar {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="titlebar">
+      <div class="brand"><span class="brand-mark">V</span> vlk_be_gui Admin</div>
+      <nav class="menu">
+        <span>Файл</span>
+        <span>Данные</span>
+        <span>Отчеты</span>
+        <span>Сервис</span>
+        <span>Справка</span>
+      </nav>
+      <div class="session"><span>main.db</span><span class="status-pill ok">online</span></div>
+    </header>
+
+    <section class="toolbar">
+      <div class="tools">
+        <button class="btn primary">＋ Новая запись</button>
+        <button class="btn">⟳ Обновить</button>
+        <button class="btn">⇩ Экспорт</button>
+        <button class="btn icon">⚙</button>
+      </div>
+      <div class="search">
+        <input value="ООО Альфа" aria-label="Глобальный поиск">
+      </div>
+      <div class="tools">
+        <button class="btn">Фильтры</button>
+        <button class="btn">Колонки</button>
+      </div>
+    </section>
+
+    <main class="workspace">
+      <aside class="pane left">
+        <div class="pane-head">Навигация <span>⌘K</span></div>
+        <div class="pane-body tree">
+          <div class="tree-section">
+            <div class="tree-title">База данных</div>
+            <div class="tree-row active">▦ Клиенты</div>
+            <div class="tree-row">▦ Заказы</div>
+            <div class="tree-row">▦ Платежи</div>
+            <div class="tree-row">▦ Номенклатура</div>
+          </div>
+          <div class="tree-section">
+            <div class="tree-title">Отчеты</div>
+            <div class="tree-row">◫ Продажи</div>
+            <div class="tree-row">◫ Дебиторка</div>
+            <div class="tree-row">◫ Склад</div>
+          </div>
+          <div class="tree-section">
+            <div class="tree-title">Справочники</div>
+            <div class="tree-row">◇ Валюты</div>
+            <div class="tree-row">◇ Регионы</div>
+            <div class="tree-row">◇ Статусы</div>
+          </div>
+        </div>
+      </aside>
+
+      <div class="splitter"></div>
+
+      <section class="main">
+        <div class="tabs">
+          <div class="tab active">Клиенты</div>
+          <div class="tab">Отчет продаж</div>
+          <div class="tab">Календарь платежей</div>
+        </div>
+
+        <div class="filterbar">
+          <div class="field">
+            <label>Автопоиск</label>
+            <input value="альфа">
+          </div>
+          <div class="field">
+            <label>Статус</label>
+            <select><option>Активные</option><option>Все</option></select>
+          </div>
+          <div class="field">
+            <label>Регион</label>
+            <select><option>Все регионы</option><option>Москва</option></select>
+          </div>
+          <div class="field">
+            <label>Баланс от</label>
+            <input value="10 000,00 ₽">
+          </div>
+          <div class="field">
+            <label>Обновлено</label>
+            <input value="01.06.2026">
+          </div>
+          <div class="field">
+            <label>&nbsp;</label>
+            <button class="btn">Применить</button>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 54px">ID</th>
+                <th>Клиент</th>
+                <th style="width: 130px">ИНН</th>
+                <th style="width: 112px">Статус</th>
+                <th class="num" style="width: 130px">Баланс</th>
+                <th class="center" style="width: 112px">Дата</th>
+                <th style="width: 150px">Менеджер</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="selected">
+                <td>1024</td>
+                <td>ООО Альфа Проект</td>
+                <td>7705123401</td>
+                <td><span class="status-pill ok">активен</span></td>
+                <td class="num">1 245 900,00 ₽</td>
+                <td class="center">07.06.2026</td>
+                <td>Иванова</td>
+              </tr>
+              <tr>
+                <td>1025</td>
+                <td>АО Альфа Сервис</td>
+                <td>7719081120</td>
+                <td><span class="status-pill warn">проверка</span></td>
+                <td class="num">98 400,50 ₽</td>
+                <td class="center">06.06.2026</td>
+                <td>Петров</td>
+              </tr>
+              <tr>
+                <td>1026</td>
+                <td>ИП Смирнов А. В.</td>
+                <td>502912009933</td>
+                <td><span class="status-pill ok">активен</span></td>
+                <td class="num">12 018,00 ₽</td>
+                <td class="center">04.06.2026</td>
+                <td>Иванова</td>
+              </tr>
+              <tr>
+                <td>1027</td>
+                <td>ООО Вектор Финанс</td>
+                <td>7801450198</td>
+                <td><span class="status-pill danger">долг</span></td>
+                <td class="num">-34 210,10 ₽</td>
+                <td class="center">02.06.2026</td>
+                <td>Соколова</td>
+              </tr>
+              <tr>
+                <td>1028</td>
+                <td>ЗАО Север Логистик</td>
+                <td>5402209345</td>
+                <td><span class="status-pill ok">активен</span></td>
+                <td class="num">780 000,00 ₽</td>
+                <td class="center">31.05.2026</td>
+                <td>Петров</td>
+              </tr>
+              <tr>
+                <td>1029</td>
+                <td>ООО ТехноМаркет</td>
+                <td>6671029341</td>
+                <td><span class="status-pill warn">проверка</span></td>
+                <td class="num">230 501,75 ₽</td>
+                <td class="center">29.05.2026</td>
+                <td>Иванова</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <section class="report-preview">
+            <h3>Сводка по выбранному клиенту</h3>
+            <div class="report-grid">
+              <span>Оборот за месяц</span><strong>2 840 300,00 ₽</strong>
+              <span>Средний чек</span><strong>118 345,83 ₽</strong>
+              <span>Просрочено</span><strong style="color: var(--danger)">0,00 ₽</strong>
+              <span>Последний платеж</span><strong>07.06.2026 14:25</strong>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <div class="splitter right-split"></div>
+
+      <aside class="pane right inspector">
+        <div class="pane-head">Карточка клиента <span class="status-pill warn">изменено</span></div>
+        <div class="pane-body">
+          <div class="record-title">
+            <strong>ООО Альфа Проект</strong>
+            <span>ID 1024 · обновлено 07.06.2026 14:25</span>
+          </div>
+          <form class="form">
+            <label>Название</label>
+            <input class="dirty" value="ООО Альфа Проект">
+            <label>ИНН</label>
+            <input value="7705123401">
+            <label>Статус</label>
+            <select><option>Активен</option><option>Проверка</option></select>
+            <label>Баланс</label>
+            <input value="1 245 900,00 ₽">
+            <label>Лимит</label>
+            <input value="2 000 000,00 ₽">
+            <label>Дата договора</label>
+            <input value="15.03.2024">
+            <label>Менеджер</label>
+            <select><option>Иванова</option><option>Петров</option></select>
+            <label>Комментарий</label>
+            <textarea>Ключевой клиент. Согласовать новый отчет по оплатам.</textarea>
+            <div class="error-text">Название изменено: требуется сохранить запись</div>
+          </form>
+        </div>
+        <div class="inspector-actions">
+          <button class="btn">Отменить</button>
+          <button class="btn primary">Сохранить</button>
+        </div>
+      </aside>
+    </main>
+
+    <footer class="statusbar">
+      <span>6 строк показано · фильтр: альфа · автопоиск включен</span>
+      <span><span class="kbd">Ctrl</span> + <span class="kbd">S</span> сохранить</span>
+      <span>RU</span>
+      <span>100%</span>
+    </footer>
+  </div>
+</body>
+</html>
